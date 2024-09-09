@@ -1,17 +1,27 @@
-const getYTinfo = (data) => {
+import { getDateParam } from "../utils/TimeUtils"
+
+const getYTinfo = () => {
 	return new Promise((resolve, reject) => {
 		uni.request({
-			url: '/publicapp/sys/xbxzbghytjdcx/modules/pcdjk/hqhyxxxx.do?RQ=2024-07-23&pageSize=10&pageNumber=1',
+			// url: `http://ehall.cqupt.edu.cn/publicapp/sys/xbxzbghytjdcx/modules/pcdjk/hqytxxxx.do?RQ=${getDateParam()}`,
+			url: `http://ehall.cqupt.edu.cn/publicapp/sys/xbxzbghytjdcx/modules/pcdjk/hqytxxxx.do?RQ=2024-07-23`,
 			method: 'POST',
-			data: data,
-			success(res) {
-				console.log(res.data)
-				resolve(res)
+			data:{
+				pageSize:"10",
+				pageNumber:"1"
 			},
-			fail() {
-				reject({
-
-				console.log('获取会议详细信息错误')
+			// data: data,
+			success(res) {
+				// console.log("议题信息",res)
+				if(res.statusCode === 200){
+					if(res.data.code === '0'){
+					    resolve(res.data)
+					}
+				}
+				reject("获取议题信息出错")
+			},
+			fail(err) {
+				reject(err)
 			}
 		})
 	})

@@ -3,12 +3,12 @@
     <view class="content">
       <image src="../../static/2.png" mode=""></image>
       <view class="HYinfo">
-        <view class="YTBH">议题编号：{{arrs[curYTIndex].YTBH}}</view>
-        <view class="YTMC">当前议题：{{arrs[curYTIndex].YTMC}}</view>
+        <view class="YTBH">议题编号：{{YTrow[curYTIndex]?.YTBH}}</view>
+        <view class="YTMC">当前议题：{{YTrow[curYTIndex]?.YTMC}}</view>
         <view class="HBDW">
-          汇报单位：{{arrs[curYTIndex].HBDW_DISPLAY}}
+          {{YTrow[curYTIndex].HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}
           <view class="HBR">
-            汇报人：{{arrs[curYTIndex].HHRY}}
+         {{YTrow[curYTIndex]?.HHRY ? `汇报人：${YTrow[curYTIndex]?.HHRY}`: ''}}
           </view>
 
         </view>
@@ -32,22 +32,23 @@
           <view class="content-main-header" style="text-align: center; font-size: 23rpx;">
             会议议程
           </view>
-          <view class="content-main-info">
-            <view class="content-main-info-name">{{arrs[curYTIndex].YTMC}}</view>
-            <view class="content-main-info-ZT">【{{arrs[curYTIndex].ZT_DISPLAY}}】</view>
+		  <view class="content-main-info">
+		 <view class="content-main-info-name">{{YTrow[curYTIndex]?.YTMC}}</view>
+		 <view class="content-main-info-ZT">{{YTrow[curYTIndex].ZT_DISPLAY ? `【${YTrow[curYTIndex]?.ZT_DISPLAY}】`: ''}}</view>
+		</view>
+		<view class="HBDW-HBR">
+		<view class="HBDW">{{YTrow[curYTIndex].HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}</view>
+		<view class="HBR">{{YTrow[curYTIndex]?.HHRY ? `汇报人：${YTrow[curYTIndex]?.HHRY}`: ''}}</view>
+		</view>
+		<view class="content-main-info" style="margin-top: 8rpx;" v-if = YTrow[curYTIndex+1]>
+		<view class="content-main-info-name">{{YTrow[curYTIndex+1]?.YTMC}}</view>
+		<view class="content-main-info-ZT">【{{YTrow[curYTIndex+1]?.ZT_DISPLAY}}】</view>
+		</view>
+		<view class="HBDW-HBR" style="margin-top: 10rpx;" v-if = YTrow[curYTIndex+1]>
+		<view class="HBDW">汇报单位：{{YTrow[curYTIndex+1]?.HBDW_DISPLAY}}</view>
+		<view class="HBR">汇报人：{{YTrow[curYTIndex+1]?.HHRY}}</view>
           </view>
-          <view class="HBDW-HBR">
-            <view class="HBDW">汇报单位：{{arrs[curYTIndex].HBDW_DISPLAY}}</view>
-            <view class="HBR">汇报人：{{arrs[curYTIndex].HHRY}}</view>
-          </view>
-          <view class="content-main-info" style="margin-top: 8rpx;">
-            <view class="content-main-info-name">{{arrs[curYTIndex+1].YTMC}}</view>
-            <view class="content-main-info-ZT">【{{arrs[curYTIndex+1].ZT_DISPLAY}}】</view>
-          </view>
-          <view class="HBDW-HBR" style="margin-top: 10rpx;">
-            <view class="HBDW">汇报单位：{{arrs[curYTIndex+1].HBDW_DISPLAY}}</view>
-            <view class="HBR">汇报人：{{arrs[curYTIndex+1].HHRY}}</view>
-          </view>
+
         </view>
       </view>
     </view>
@@ -55,56 +56,130 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted } from "vue";
-import {getDate, getClock, getWeek} from "../../utils/TimeUtils.js";
-// import getYTinfo from "../../request/getYTinfo.js";
 
+
+import { ref, onUnmounted,  onMounted} from "vue";
+import {getDate, getClock, getWeek} from "../../utils/TimeUtils.js";
+import getHYinfo from "../../request/getHYinfo.js";
+import getYTinfo from "../../request/getYTinfo.js";
+import { HYinfoType, YTrowItem} from "../../types/OutSide.js";
 
 const colock = ref(getClock())
 const weekday = ref(getWeek())
 const date = ref(getDate())
+const HYinfo = ref<HYinfoType>({
+	WID:"",
+	HYMC:"",
+	HYKSSJ:"",
+	HYDD:"",
+	ZCR:""
+})
 
-let arrs = ref([])
-
-// getYTinfo()
-
+const YTrow = ref<YTrowItem[]>([{
+	YTMC:"",
+	HBDW_DISPLAY: "",
+	ZT_DISPLAY: "",
+	ZT:"",
+	HHRY: "" ,//汇报人列表
+	YTBH:""
+}])
 const curYTIndex = ref(0)
+const isPolling = ref(true)
+let rollStep = 1
 
-function request(){
-  uni.request({
-    // 生产环境
-    // url: `http://ehall.cqupt.edu.cn/publicapp/sys/xbxzbghytjdcx/modules/pcdjk/hqytxxxx.do?RQ=${getDateParam()}`,
-    // 开发环境
-    url: `http://ehall.cqupt.edu.cn/publicapp/sys/xbxzbghytjdcx/modules/pcdjk/hqytxxxx.do?RQ=2024-07-23`,
-    method: 'POST',
-    data:{
-      pageSize:"10",
-      pageNumber:"1"
-    } ,
-    success:res=>{
-      console.log(res);
-      arrs.value = res.data.datas.hqytxxxx.rows
-    }
-  })
+Array.prototype.findLastIndex = function(callback:Function) {  
+    // 从数组的最后一个元素开始反向查找  
+    for (let i = this.length - 1; i >= 0; i--) {  
+        // 如果找到符合条件的元素，返回其索引  
+        if (callback(this[i], i, this)) {  
+            return i;  
+        }  
+    }  
+    // 如果没有找到符合条件的元素，返回 -1  
+    return -1;  
+}; 
+
+
+//用于议题的滚动
+const rollYT = () => {
+	curYTIndex.value += rollStep
 }
-request();
+
+// setInterval(() => {
+// 	console.log("roll")
+// 	rollYT()
+// },7500)
 
 
 
+const updateYTinfo = () => {
+	getYTinfo().then((res) => {
+		// console.log("hhhhhhh",res.datas.hqytxxxx.rows.filter((item: { HYID: string; }) => item.HYID === HYinfo.value.WID))
+		YTrow.value = res.datas.hqytxxxx.rows.filter((item: { HYID: string; }) => item.HYID === HYinfo.value.WID)
+		// 1:未开始 2:等候中 3:进行中 4:已结束 5:即将结束
+		curYTIndex.value = Math.max(YTrow.value.findIndex(item => item.ZT == '3'),Math.max(YTrow.value.findLastIndex((item) => item.ZT == '4'),0)); //要么正在进行中的，要么是最后一个已结束的，要么是第零个
+		curYTIndex.value = Math.max(0,Math.min(curYTIndex.value,YTrow.value.length-3)) //最大为倒数第三个，但是也不能小于0
+		if(YTrow.value.length > 2){
+			setTimeout(() => {
+				console.log("roll")
+				rollYT()
+			},7500)
+		}
+	}).catch(err => {
+		console.log(err)
+	})
+}
 
-let timer = setInterval(() => {
-  colock.value = getClock()
-  date.value = getDate()
-  weekday.value = getWeek()
-},1000)
+const startPolling = () => {
+	if(!isPolling.value) return;
+	console.log("polling")
+	setTimeout(() => {
+		getHYinfo().then((res) => {
+				const {HYMC,HYKSSJ,HYDD,ZCR,WID} = res.datas.hqhyxxxx.rows[0]
+				HYinfo.value.HYMC = HYMC
+				HYinfo.value.HYDD = HYDD
+				HYinfo.value.HYKSSJ = HYKSSJ
+				HYinfo.value.ZCR = ZCR
+				HYinfo.value.WID = WID
+				updateYTinfo()
+				startPolling()
+			}).catch(err => {
+				console.log(err)
+			})
+	},15000)
+}
 
-onUnmounted(() => {
-  console.log("清除")
-  clearInterval(timer)
+const stopPolling = () => {
+	isPolling.value = false
+}
+
+onMounted(() => {
+	getHYinfo().then((res) => {
+			const {HYMC,HYKSSJ,HYDD,ZCR,WID} = res.datas.hqhyxxxx.rows[0]
+			HYinfo.value.HYMC = HYMC
+			HYinfo.value.HYDD = HYDD
+			HYinfo.value.HYKSSJ = HYKSSJ
+			HYinfo.value.ZCR = ZCR
+			HYinfo.value.WID = WID
+			updateYTinfo()
+			startPolling()
+		}).catch(err => {
+			console.log(err)
+		})
 })
 
 
+let timer = setInterval(() => {
+	colock.value = getClock()
+	date.value = getDate()
+	weekday.value = getWeek()
+},1000)
 
+onUnmounted(() => {
+	console.log("清除")
+	stopPolling()
+	clearInterval(timer)
+})
 </script>
 
 <style scoped lang="scss">

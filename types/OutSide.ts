@@ -12,4 +12,5 @@ export interface YTrowItem {
 	ZT_DISPLAY: string,
 	ZT: string,
 	HHRY: string,
+	YTBH:string ,
 }
