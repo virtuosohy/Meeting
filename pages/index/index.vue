@@ -6,8 +6,8 @@
       <view class="title">{{HYinfo.HYMC}}</view>
       <view class="HYinfo">
 
-        <view class="YTBH">议题编号：{{YTrow[curYTIndex]?.YTBH}}</view>
-        <view class="YTMC">当前议题：{{YTrow[curYTIndex]?.YTMC}}</view>
+        <view class="YTBH">{{YTrow[curYTIndex]?.YTBH  ? `汇报单位：${YTrow[curYTIndex].YTBH}`:''}}</view>
+        <view class="YTMC">{{YTrow[curYTIndex]?.YTMC ? `汇报单位：${YTrow[curYTIndex].YTMC }`:''}}</view>
 
         <view class="HBDW">
           {{YTrow[curYTIndex].HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}
@@ -62,14 +62,14 @@
             <view class="box left"><image src="../../static/bgn.png" mode="" class="img2"></image></view>
             <view class="box right">
               <view class="content-main-info-name" >{{YTrow[curYTIndex+1]?.YTMC}}</view>
-              <view :class="getClassByIndex(YTrow[curYTIndex].ZT)">【{{YTrow[curYTIndex+1]?.ZT_DISPLAY}}】</view>
+              <view :class="getClassByIndex(YTrow[curYTIndex].ZT)">{{YTrow[curYTIndex+1]?.ZT_DISPLAY ? `【${YTrow[curYTIndex]?.ZT_DISPLAY}】`: ''}}</view>
             </view>
           </view>
 
 
           <view class="HBDW-HBR2" style="margin-top: 10rpx;" >
-            <view class="HBDW">汇报单位：{{YTrow[curYTIndex+1]?.HBDW_DISPLAY}}</view>
-            <view class="HBR">汇报人：{{YTrow[curYTIndex+1]?.HHRY}}</view>
+            <view class="HBDW">{{YTrow[curYTIndex+1]?.HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}</view>
+            <view class="HBR">{{YTrow[curYTIndex+1]?.HHRY ? `汇报人：${YTrow[curYTIndex]?.HHRY}`: ''}}</view>
           </view>
           <view class="rt">
             重庆邮电大学信息中心，蓝山工作室开发
