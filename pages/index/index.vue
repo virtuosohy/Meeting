@@ -249,7 +249,21 @@ onUnmounted(() => {
 // 	background-color: #aaa;
 // }
 
-
+.ZT-1 {
+  color: coral;
+}
+.ZT-2 {
+  color: burlywood;
+}
+.ZT-3 {
+  color: bisque;
+}
+.ZT-4 {
+  color: darkcyan;
+}
+.ZT-5 {
+  color: cornsilk;
+}
 
 .bg{
   width: 100%;
