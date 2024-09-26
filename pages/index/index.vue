@@ -6,8 +6,8 @@
       <view class="title">{{HYinfo.HYMC}}</view>
       <view class="HYinfo">
 
-        <view class="YTBH">{{YTrow[curYTIndex]?.YTBH  ? `汇报单位：${YTrow[curYTIndex].YTBH}`:''}}</view>
-        <view class="YTMC">{{YTrow[curYTIndex]?.YTMC ? `汇报单位：${YTrow[curYTIndex].YTMC }`:''}}</view>
+        <view class="YTBH">{{YTrow[curYTIndex]?.YTBH  ? `会议编号：${YTrow[curYTIndex].YTBH}`:''}}</view>
+        <view class="YTMC">{{YTrow[curYTIndex]?.YTMC ? `会议名称：${YTrow[curYTIndex].YTMC }`:''}}</view>
 
         <view class="HBDW">
           {{YTrow[curYTIndex].HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}
@@ -49,7 +49,7 @@
             </view>
           </view>
 
-          <view class="yellow"><image src="../../static/yn.png" mode="" class="yn" ></image></view>
+         
 
           <view class="HBDW-HBR1">
             <view class="HBDW">{{YTrow[curYTIndex].HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}</view>
@@ -72,7 +72,7 @@
             <view class="HBR">{{YTrow[curYTIndex+1]?.HHRY ? `汇报人：${YTrow[curYTIndex]?.HHRY}`: ''}}</view>
           </view>
           <view class="rt">
-            重庆邮电大学信息中心，蓝山工作室开发
+            重庆邮电大学信息中心（62461295）蓝山工作室开发
           </view>
         </view>
 
@@ -383,7 +383,7 @@ onUnmounted(() => {
         color: #fff;
         font-size: 6rpx;
         top: 410rpx;
-        right: 6rpx;
+        right: 30rpx;
 
       }
 
@@ -417,14 +417,14 @@ onUnmounted(() => {
         }
       }
 
-      .yellow{
-        order: 3;
-        height: 5%;
-        .yn{
-          height: 80%;
-          width:  100%;
-        }
-      }
+      // .yellow{
+      //   order: 3;
+      //   height: 5%;
+      //   .yn{
+      //     height: 80%;
+      //     width:  100%;
+      //   }
+      // }
 
       .HBDW-HBR1{
         order: 6;
