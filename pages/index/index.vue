@@ -6,8 +6,8 @@
       <view class="title">{{HYinfo.HYMC}}</view>
       <view class="HYinfo">
 
-        <view class="YTBH">{{YTrow[curYTIndex]?.YTBH  ? `会议编号：${YTrow[curYTIndex].YTBH}`:''}}</view>
-        <view class="YTMC">{{YTrow[curYTIndex]?.YTMC ? `会议名称：${YTrow[curYTIndex].YTMC }`:''}}</view>
+        <view class="YTBH">{{YTrow[curYTIndex]?.YTBH  ? `议题编号：${YTrow[curYTIndex].YTBH}`:''}}</view>
+        <view class="YTMC">{{YTrow[curYTIndex]?.YTMC ? `汇报单位：${YTrow[curYTIndex].YTMC }`:''}}</view>
 
         <view class="HBDW">
           {{YTrow[curYTIndex].HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}
@@ -22,7 +22,7 @@
       <view class="content-right">
         <view class="content-right-header">
           <view class="tempretrue">
-            {{a.temperature}}°
+            {{ a.temperature ? `${a.temperature}°` : "" }}
           </view>
           <view class="city">Chongqing</view>
           <view class="time">
@@ -42,32 +42,38 @@
           </view>
 
           <view class="content-main-info1">
-            <view class="box left"><image src="../../static/bun.png" mode="" class="img1"></image></view>
+            <view class="box left"><image :src="
+                  YTrow[curYTIndex]?.ZT == 3
+                    ? '../../static/bun.png'
+                    : '../../static/bgn.png'" mode="" class="img1" ></image></view>
             <view class="box right">
               <view class="content-main-info-name">{{YTrow[curYTIndex]?.YTMC}}</view>
               <view :class="getClassByIndex(YTrow[curYTIndex].ZT)">{{YTrow[curYTIndex].ZT_DISPLAY ? `【${YTrow[curYTIndex]?.ZT_DISPLAY}】`: ''}}</view>
             </view>
-          </view>
 
-         
 
-          <view class="HBDW-HBR1">
+            <view class="yellow"><image src="../../static/yn.png" class="yn"  v-show="YTrow[curYTIndex]?.ZT == 3"></image></view>
+
+
             <view class="HBDW">{{YTrow[curYTIndex].HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}</view>
             <view class="HBR">{{YTrow[curYTIndex]?.HHRY ? `汇报人：${YTrow[curYTIndex]?.HHRY}`: ''}}</view>
           </view>
 
 
 
-          <view class="content-main-info2" style="margin-top: 30rpx;" >
-            <view class="box left"><image src="../../static/bgn.png" mode="" class="img2"></image></view>
+          <view class="content-main-info2" style="margin-top: 15rpx;" >
+            <view class="box left"><image :src="
+                  YTrow[curYTIndex + 1]?.ZT == 3
+                    ? '../../static/bun.png'
+                    : '../../static/bgn.png' " mode="" class="img2"  ></image></view>
             <view class="box right">
               <view class="content-main-info-name" >{{YTrow[curYTIndex+1]?.YTMC}}</view>
               <view :class="getClassByIndex(YTrow[curYTIndex].ZT)">{{YTrow[curYTIndex+1]?.ZT_DISPLAY ? `【${YTrow[curYTIndex]?.ZT_DISPLAY}】`: ''}}</view>
             </view>
-          </view>
+
+            <view class="yellow"><image src="../../static/yn.png" class="yn"   v-show="YTrow[curYTIndex + 1]?.ZT == 3"></image></view>
 
 
-          <view class="HBDW-HBR2" style="margin-top: 10rpx;" >
             <view class="HBDW">{{YTrow[curYTIndex+1]?.HBDW_DISPLAY ? `汇报单位：${YTrow[curYTIndex].HBDW_DISPLAY}`:''}}</view>
             <view class="HBR">{{YTrow[curYTIndex+1]?.HHRY ? `汇报人：${YTrow[curYTIndex]?.HHRY}`: ''}}</view>
           </view>
@@ -382,87 +388,84 @@ onUnmounted(() => {
         position: absolute;
         color: #fff;
         font-size: 6rpx;
-        top: 410rpx;
-        right: 30rpx;
+        top: 360rpx;
+        right: 0rpx;
 
       }
 
       .content-main-info1{
-        order: 2;
-        margin-top: 10rpx;
         display: grid;
-        grid-template-columns: 1fr 10fr;
-        row-gap: 10px;
-        margin-bottom: -8rpx;
+        grid-template-rows: 1fr 1fr 1fr 1fr; /* 四行 */
+        grid-template-columns: 1fr 10fr; /* 两列 */
+        margin-top: 20rpx;
         .img1{
           width:25rpx;
           height:25rpx;
-          margin-left: 8rpx;
-        }
-        .box{
-          height: 100px;
-          display: flex;
-          position: relative;
-          align-items: center;
+          margin-left: 10rpx;
         }
 
-        .content-main-info-name{
-          order: 4;
+
+        .content-main-info-name  {
           font-size:12rpx;
         }
-        .content-main-info-ZT{
-          order: 5;
+        .content-main-info-ZT  {
           font-size: 8rpx;
           white-space: nowrap;
         }
       }
-
-      // .yellow{
-      //   order: 3;
-      //   height: 5%;
-      //   .yn{
-      //     height: 80%;
-      //     width:  100%;
-      //   }
-      // }
-
-      .HBDW-HBR1{
-        order: 6;
-        margin-left: 38rpx;
-        margin-top: -6rpx;
-        font-size: 10rpx;
+      .yn{
+        width:250rpx;
+        height:25rpx;
+        margin-left: -30rpx;
       }
 
+      .yellow,
+      .HBDW,
+      .HBR{
+        grid-column: 1 / -1;
+        margin-left: 38rpx;
+        font-size: 10rpx;
+        margin-top: -7rpx;
+      }
+
+
       .content-main-info2{
-        order:7;
         display: grid;
-        grid-template-columns: 1fr 10fr;
-        row-gap: 0px;
+        grid-template-rows: 1fr 1fr 1fr 1fr; /* 四行 */
+        grid-template-columns: 1fr 10fr; /* 两列 */
+        margin-top: 20rpx;
         .img2{
           width:25rpx;
           height:25rpx;
-          row-gap: 10px;
-          margin-left: 8rpx;
-
+          margin-left: 10rpx;
         }
-        .content-main-info-name{
-          order: 8;
+
+
+        .content-main-info-name  {
           font-size:12rpx;
         }
-        .content-main-info-ZT{
-          order: 9;
+        .content-main-info-ZT  {
           font-size: 8rpx;
           white-space: nowrap;
         }
       }
-
-
-      .HBDW-HBR2{
-        order: 10;
-        margin-left: 38rpx;
-        margin-top: -6rpx;
-        font-size: 10rpx;
+      .yn{
+        width:250rpx;
+        height:25rpx;
+        margin-left: -30rpx;
       }
+
+      .yellow,
+      .HBDW,
+      .HBR{
+        grid-column: 1 / -1;
+        margin-left: 38rpx;
+        font-size: 10rpx;
+        margin-top: -7rpx;
+      }
+
+
+
     }
   }
 }
