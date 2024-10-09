@@ -78,7 +78,9 @@
             <view class="HBR">{{YTrow[curYTIndex+1]?.HHRY ? `汇报人：${YTrow[curYTIndex]?.HHRY}`: ''}}</view>
           </view>
           <view class="rt">
-            重庆邮电大学信息中心（62461295）蓝山工作室开发
+            重庆邮电大学信息化办<br>
+            蓝山工作室开发<br>
+            技术支持：62461295
           </view>
         </view>
 
@@ -387,9 +389,9 @@ onUnmounted(() => {
         order: 1;
         position: absolute;
         color: #fff;
-        font-size: 6rpx;
-        top: 360rpx;
-        right: 0rpx;
+        font-size: 8rpx;
+        top: 350rpx;
+        right: 80rpx;
 
       }
 
