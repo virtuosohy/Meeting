@@ -122,7 +122,10 @@
             >
             <view class="HBR">汇报人：{{ YTrow[curYTIndex + 1]?.HHRY }}</view>
           </view>
-          <view class="rt"> 重庆邮电大学信息中心，蓝山工作室开发 </view>
+          <view class="rt"> 重庆邮电大学信息化办 <br>
+		                      蓝山工作室开发 <br>
+							  技术支持：62461295
+							  </view>
         </view>
       </view>
     </view>
@@ -404,9 +407,9 @@ image {
       .rt {
         position: absolute;
         color: #fff;
-        font-size: 6rpx;
-        top: 410rpx;
-        right: 6rpx;
+        font-size: 8rpx;
+        top: 350rpx;
+        right: 80rpx;
       }
 
       .content-main-info1 {
